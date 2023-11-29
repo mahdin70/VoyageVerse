@@ -1,19 +1,22 @@
-const express = require('express');
+const express = require("express");
 const app = express();
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
-const connectDB = async()=>{
-    try{
-        await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        console.log('MongoDB connected');
-    }catch(err){
-        console.log(err.message);
-        process.exit(1);
-    }
-}
+const connectDB = async () => {
+  try {
+    await mongoose.connect(
+      "mongodb+srv://chadspl:chadspl@cluster0.sevp7ws.mongodb.net/?retryWrites=true&w=majority"
+    );
+    console.log("Database is Connected Successfully!");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+dotenv.config();
 
 app.listen(5000, () => {
-    console.log('Server is running on port 5000')
+  connectDB();
+  console.log("App is Running on Port " + 5000);
 });
