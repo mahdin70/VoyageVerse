@@ -1,33 +1,37 @@
-import {Link, useNavigate} from 'react-router-dom'
-import Footer from '../components/Footer'
-import {URL} from '../url'
-import axios from 'axios'
-import { useState } from 'react'
+import { Link, useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
+import { URL } from "../url";
+import axios from "axios";
+import { useState } from "react";
+
 const Register = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
-   const [username, setUsername] = useState("");
-   const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
-   const [error, setError] = useState(false);
-   const navigate = useNavigate();
+  const handleRegister = async () => {
+    try {
+      const res = await axios.post(URL + "/api/auth/register", {
+        username,
+        email,
+        password,
+      });
+      setUsername(res.data.username);
+      setEmail(res.data.email);
+      setPassword(res.data.password);
+      setError(false);
+      navigate("/login");
+    } catch (err) {
+      setError(true);
+      console.log(err);
+    }
+  };
 
-   const handleRegister = async () => {
-     try {
-       const res = await axios.post(URL + "/api/auth/register", {
-         username,
-         email,
-         password,
-       });
-       setUsername(res.data.username);
-       setEmail(res.data.email);
-       setPassword(res.data.password);
-       setError(false);
-       navigate("/login");
-     } catch (err) {
-       setError(true);
-       console.log(err);
-     }
-   };
+  const handleGoogleLogin = () => {
+    window.location.href = `${URL}/api/auth/google`;
+  };
 
   return (
     <>
@@ -80,6 +84,14 @@ const Register = () => {
             <h3 className="text-red-500 text-sm ">Something went wrong</h3>
           )}
 
+          {/* Google OAuth Button */}
+          <button
+            onClick={handleGoogleLogin}
+            className="w-full px-4 py-2 text-base font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-700 hover:text-white "
+          >
+            Sign in with Google
+          </button>
+
           <div className="flex justify-center items-center space-x-3">
             <p>Already have an account?</p>
             <p className="text-gray-500 hover:text-black">
@@ -91,6 +103,6 @@ const Register = () => {
       <Footer />
     </>
   );
-}
+};
 
-export default Register
+export default Register;

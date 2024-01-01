@@ -28,22 +28,24 @@ const Navbar = () => {
         </Link>
       </h1>
 
-       {path==="/" &&<div className="flex items-center space-x-2">
-        <div className="relative flex items-center">
-          <BsSearch
-            onClick={() =>
-              navigate(prompt ? "?search=" + prompt : navigate("/"))
-            }
-            className="cursor-pointer absolute left-4 text-gray-500"
-          />
-          <input
-            onChange={(e) => setPrompt(e.target.value)}
-            className="rounded-full w-[200px] pl-8 pr-3 py-2 border-2 border-black focus:outline-none focus:border-blue-500"
-            placeholder="Search a Post"
-            type="text"
-          />
+      {path === "/" && (
+        <div className="flex items-center space-x-2">
+          <div className="relative flex items-center">
+            <BsSearch
+              onClick={() =>
+                navigate(prompt ? "?search=" + prompt : navigate("/"))
+              }
+              className="cursor-pointer absolute left-4 text-gray-500"
+            />
+            <input
+              onChange={(e) => setPrompt(e.target.value)}
+              className="rounded-full w-[200px] pl-8 pr-3 py-2 border-2 border-black focus:outline-none focus:border-blue-500"
+              placeholder="Search a Post"
+              type="text"
+            />
+          </div>
         </div>
-      </div>}
+      )}
 
       <div className="hidden md:flex items-center justify-center space-x-2 md:space-x-4">
         {user ? (

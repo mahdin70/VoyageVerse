@@ -80,6 +80,12 @@ const Login = () => {
               <Link to="/register">Register</Link>
             </p>
           </div>
+          <div className="flex justify-center items-center space-x-3">
+            <p>Forgot Password ? Click Here to</p>
+            <p className="text-red-800">
+              <Link to="/forgot-password" className="text-red-500" >Reset Password</Link>
+            </p>
+          </div>
         </div>
       </div>
       <Footer />

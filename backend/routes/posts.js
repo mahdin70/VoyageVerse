@@ -64,7 +64,7 @@ router.get("/", async (req, res) => {
     const searchFilter = {
       title: { $regex: query.search, $options: "i" },
     };
-    const posts = await Post.find(query.search ? searchFilter : null);
+    const posts = await Post.find(query.search ? searchFilter : null).sort({updatedAt:-1});
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json(err);

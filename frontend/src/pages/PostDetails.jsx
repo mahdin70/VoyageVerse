@@ -1,15 +1,14 @@
-import { useNavigate, useParams } from "react-router-dom"
-import Comment from "../components/Comment"
-import Footer from "../components/Footer"
-import Navbar from "../components/Navbar"
-import {BiEdit} from 'react-icons/bi'
-import {MdDelete} from 'react-icons/md'
-import axios from "axios"
-import { URL, IF } from "../url"
-import { useContext, useEffect, useState } from "react"
-import { UserContext } from "../context/UserContext"
-import Loader from "../components/Loader"
-
+import { useNavigate, useParams } from "react-router-dom";
+import Comment from "../components/Comment";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+import { BiEdit } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
+import axios from "axios";
+import { URL, IF } from "../url";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../context/UserContext";
+import Loader from "../components/Loader";
 
 const PostDetails = () => {
   const postId = useParams().id;
@@ -75,7 +74,7 @@ const PostDetails = () => {
         },
         { withCredentials: true }
       );
-    
+
       window.location.reload(true);
     } catch (err) {
       console.log(err);
