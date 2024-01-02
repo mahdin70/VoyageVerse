@@ -45,17 +45,28 @@ const PostDetails = () => {
     fetchPost();
   }, [postId]);
 
-  const fetchPostComments = async () => {
-    setLoader(true);
-    try {
-      const res = await axios.get(URL + "/api/comments/post/" + postId);
-      setComments(res.data);
-      setLoader(false);
-    } catch (err) {
-      setLoader(true);
-      console.log(err);
-    }
-  };
+ const fetchPostComments = async () => {
+   setLoader(true);
+   try {
+     const res = await axios.get(URL + "/api/comments/post/" + postId);
+     const commentsWithUpdatedUsername = await Promise.all(
+       res.data.map(async (comment) => {
+         const userResponse = await axios.get(
+           URL + "/api/users/" + comment.userId
+         );
+         return {
+           ...comment,
+           username: userResponse.data.username,
+         };
+       })
+     );
+     setComments(commentsWithUpdatedUsername);
+     setLoader(false);
+   } catch (err) {
+     setLoader(true);
+     console.log(err);
+   }
+ };
 
   useEffect(() => {
     fetchPostComments();
@@ -109,8 +120,10 @@ const PostDetails = () => {
             )}
           </div>
           <div className="flex items-center justify-between mt-2 md:mt-4">
-            <p>@{post.username}</p>
-            <div className="flex space-x-2">
+            <div className="bg-black text-white rounded-full px-3 py-1">
+              @{post.username}
+            </div>
+            <div className="bg-black rounded-full px-3 text-white p-1 flex space-x-2">
               <p>{new Date(post.updatedAt).toString().slice(0, 15)}</p>
               <p>{new Date(post.updatedAt).toString().slice(16, 24)}</p>
             </div>
@@ -122,7 +135,7 @@ const PostDetails = () => {
               alt=""
             />
           )}
-          <p className="mx-auto mt-8">{post.desc}</p>
+          <p className="mx-auto mt-6 text-lg">{post.desc}</p>
           <div className="flex items-center mt-8 space-x-4 font-semibold">
             <p>Categories:</p>
             <div className="flex justify-center items-center space-x-2">
@@ -136,9 +149,9 @@ const PostDetails = () => {
             </div>
           </div>
           <div className="flex flex-col mt-4">
-            <h3 className="mt-6 mb-4 font-semibold">Comments:</h3>
+            <h3 className="mt-6 mb-2 font-semibold">Comments:</h3>
             {comments?.map((c) => (
-              <Comment key={c._id} c={c} post={post} />
+              <Comment key={c._id} c={c} />
             ))}
           </div>
           {/* write a comment */}
@@ -151,7 +164,7 @@ const PostDetails = () => {
             />
             <button
               onClick={postComment}
-              className="bg-black text-sm text-white px-2 py-2 md:w-[20%] mt-4 md:mt-0"
+              className="ml-2 bg-black text-sm text-white px-2 py-2 md:w-[20%] mt-4 md:mt-0"
             >
               Add Comment
             </button>

@@ -5,19 +5,24 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
-const passport = require("passport"); // Import Passport
-const session = require("express-session");
+const passport = require("passport");
+const passportSetup = require("./passport");
 const cookieParser = require("cookie-parser");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
 const commentRoute = require("./routes/comments");
 const passwordResetRoutes = require("./routes/passwordReset");
+const cookieSession = require("cookie-session");
+const User = require("./models/User");
 
 // Database
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("Database is Connected Successfully!");
   } catch (err) {
     console.log(err);
@@ -26,32 +31,21 @@ const connectDB = async () => {
 
 // Middlewares
 dotenv.config();
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["mukitmahdin"],
+    maxAge: 24 * 60 * 60 * 100,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "/images")));
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(cookieParser());
-
-// Initialize Passport
-app.use(
-  session({
-    secret: "mukitmahdin",
-    resave: false,
-    saveUninitialized: false
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Passport serialization and deserialization
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
-});
 
 // Image Upload
 const storage = multer.diskStorage({

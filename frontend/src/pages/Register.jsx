@@ -29,8 +29,11 @@ const Register = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = `${URL}/api/auth/google`;
+  const googleAuth = () => {
+    window.open(
+      "http://localhost:5000/api/auth/google/callback",
+      "_self"
+    );
   };
 
   return (
@@ -47,7 +50,7 @@ const Register = () => {
         <h3>
           <Link
             to="/login"
-            className="no-underline text-black hover:text-gray-800"
+            className="border-1 border-solid px-5 rounded-full py-1 no-underline text-black hover:text-gray-800"
           >
             Login
           </Link>
@@ -84,20 +87,19 @@ const Register = () => {
             <h3 className="text-red-500 text-sm ">Something went wrong</h3>
           )}
 
-          {/* Google OAuth Button */}
-          <button
-            onClick={handleGoogleLogin}
-            className="w-full px-4 py-2 text-base font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-700 hover:text-white "
-          >
-            Sign in with Google
-          </button>
-
           <div className="flex justify-center items-center space-x-3">
             <p>Already have an account?</p>
             <p className="text-gray-500 hover:text-black">
               <Link to="/login">Login</Link>
             </p>
           </div>
+
+          <button
+            onClick={googleAuth}
+            className="w-full px-4 py-2 text-base font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-700 hover:text-white "
+          >
+            Sign in with Google
+          </button>
         </div>
       </div>
       <Footer />

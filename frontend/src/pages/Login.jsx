@@ -41,7 +41,7 @@ const Login = () => {
         <h3>
           <Link
             to="/register"
-            className="no-underline text-black hover:text-gray-800"
+            className="border-1 border-solid px-5 rounded-full py-1 no-underline text-black hover:text-gray-800"
           >
             Register
           </Link>

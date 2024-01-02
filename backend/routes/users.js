@@ -18,6 +18,17 @@ router.put("/:id", verifyToken, async (req, res) => {
       { $set: req.body },
       { new: true }
     );
+
+    await Post.updateMany(
+      { userId: req.params.id },
+      { $set: { username: updatedUser.username } }
+    );
+
+    await Comment.updateMany(
+      { userId: req.params.id },
+      { $set: { username: updatedUser.username } }
+    );
+
     res.status(200).json(updatedUser);
   } catch (err) {
     res.status(500).json(err);

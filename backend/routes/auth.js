@@ -1,59 +1,40 @@
 const express = require("express");
-const passport = require("passport");
 const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const dotenv = require("dotenv");
+const passport = require("passport");
 
-// Passport configuration
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID:
-        "823856282802-m3t1cmpc88eg9bqrdssc5jnf7lb88kar.apps.googleusercontent.com",
-      clientSecret: "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",
-      callbackURL: "http://localhost:5000/auth/google/callback",
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        let user = await User.findOne({ email: profile.emails[0].value });
+router.get("/login/success", (req, res) => {
+  if (req.user) {
+    res.status(200).json({
+      error: false,
+      message: "Successfully Loged In",
+      user: req.user,
+    });
+  } else {
+    res.status(403).json({ error: true, message: "Not Authorized" });
+  }
+});
 
-        if (!user) {
-          const newUser = new User({
-            username: profile.displayName,
-            email: profile.emails[0].value,
-          });
+router.get("/login/failed", (req, res) => {
+  res.status(401).json({
+    error: true,
+    message: "Log in failure",
+  });
+});
 
-          user = await newUser.save();
-        }
-
-        const token = jwt.sign(
-          { _id: user._id, username: user.username, email: user.email },
-          process.env.SECRET,
-          { expiresIn: "3d" }
-        );
-
-        return done(null, { user, token });
-      } catch (error) {
-        return done(error);
-      }
-    }
-  )
-);
-
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
+router.get("/google", passport.authenticate("google", ["profile", "email"]));
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  (req, res) => {
-    res.redirect("http://localhost:5173/");
-  }
+  passport.authenticate("google", { 
+    failureRedirect: "/login/failed" ,
+    successRedirect: "http://localhost:5173/",
+  })
 );
+
 
 //REGISTER
 router.post("/register", async (req, res) => {

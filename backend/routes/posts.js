@@ -10,7 +10,6 @@ const verifyToken = require("../verifyToken");
 router.post("/create", verifyToken, async (req, res) => {
   try {
     const newPost = new Post(req.body);
-
     const savedPost = await newPost.save();
 
     res.status(200).json(savedPost);
@@ -56,7 +55,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//GET POSTS
+// GET POSTS
 router.get("/", async (req, res) => {
   const query = req.query;
 
@@ -64,18 +63,44 @@ router.get("/", async (req, res) => {
     const searchFilter = {
       title: { $regex: query.search, $options: "i" },
     };
-    const posts = await Post.find(query.search ? searchFilter : null).sort({updatedAt:-1});
-    res.status(200).json(posts);
+
+    const posts = await Post.find(query.search ? searchFilter : null)
+      .sort({ updatedAt: -1 })
+      .lean();
+
+    const postsWithUpdatedUsername = await Promise.all(
+      posts.map(async (post) => {
+        const user = await User.findById(post.userId);
+        if (user) {
+          return { ...post, username: user.username };
+        }
+        return post;
+      })
+    );
+
+    res.status(200).json(postsWithUpdatedUsername);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-//GET USER POSTS
+// GET USER POSTS
 router.get("/user/:userId", async (req, res) => {
   try {
-    const posts = await Post.find({ userId: req.params.userId });
-    res.status(200).json(posts);
+    const posts = await Post.find({ userId: req.params.userId })
+      .sort({ createdAt: -1 })
+      .lean();
+    const postsWithUpdatedUsername = await Promise.all(
+      posts.map(async (post) => {
+        const user = await User.findById(post.userId);
+        if (user) {
+          return { ...post, username: user.username };
+        }
+        return post;
+      })
+    );
+
+    res.status(200).json(postsWithUpdatedUsername);
   } catch (err) {
     res.status(500).json(err);
   }

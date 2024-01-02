@@ -1,11 +1,12 @@
+/* eslint-disable react/jsx-key */
 import { useContext, useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import ProfilePosts from "../components/ProfilePosts";
 import axios from "axios";
-import {  URL } from "../url";
+import { URL } from "../url";
 import { UserContext } from "../context/UserContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 
 const Profile = () => {
   const param = useParams().id;
@@ -78,11 +79,17 @@ const Profile = () => {
       <div className="min-h-[80vh] px-8 md:px-[200px] mt-8 flex md:flex-row flex-col-reverse md:items-start items-start">
         <div className="flex flex-col md:w-[70%] w-full mt-8 md:mt-0">
           <h1 className="text-xl font-bold mb-4">Your posts:</h1>
+
           {posts?.map((p) => (
-            <ProfilePosts key={p._id} p={p} />
+            <Link
+              className="no-underline text-black"
+              to={user ? `/posts/post/${p._id}` : "/login"}
+            >
+              <ProfilePosts key={p._id} p={p} />
+            </Link>
           ))}
         </div>
-        <div className="md:sticky md:top-12  flex justify-start md:justify-end items-start md:w-[30%] w-full md:items-end ">
+        <div className="ml-10 border-2 border-solid p-2 rounded-lg md:sticky md:top-12 md:flex-shrink-0 flex justify-start md:justify-center items-start md:w-[25%] w-full md:items-end">
           <div className=" flex flex-col space-y-4 items-start">
             <h1 className="text-xl font-bold mb-4">Profile</h1>
             <input

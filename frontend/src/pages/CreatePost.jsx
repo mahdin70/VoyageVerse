@@ -71,35 +71,39 @@ const CreatePost = () => {
         <h1 className="font-extrabold md:text-2xl text-xl mb-8">
           Create a post
         </h1>
-        <form className="w-full flex flex-col space-y-1 md:space-y-4 mt-4">
-          <p className="font-semibold md:text-lg text-lg ">Add a Post Title</p>
+        <form className="w-full flex flex-col space-y-1 md:space-y-3 mt-4">
+          <p className="font-semibold text-blue-900 md:text-lg text-lg ">
+            Add a Post Title
+          </p>
           <input
             onChange={(e) => setTitle(e.target.value)}
             type="text"
             placeholder="Enter post title"
             className="px-4 py-2 outline-none"
           />
-          <p className="font-semibold md:text-lg text-lg ">Add a Post Image</p>
+          <p className="font-semibold text-blue-900 md:text-lg text-lg ">
+            Add a Post Image or Animated GIFs
+          </p>
           <input
             onChange={(e) => setFile(e.target.files[0])}
             type="file"
-            className="px-4"
+            className=""
           />
-          <p className="font-semibold md:text-lg text-lg ">
+          <p className="font-semibold text-blue-900 md:text-lg text-lg ">
             Add Post Categories
           </p>
           <div className="flex flex-col">
-            <div className="flex items-center space-x-4 md:space-x-8">
+            <div className="flex items-center space-x-2 md:space-x-1">
               <input
                 value={cat}
                 onChange={(e) => setCat(e.target.value)}
                 className="px-4 py-2 outline-none"
-                placeholder="Enter post category"
+                placeholder="Enter Post Category"
                 type="text"
               />
               <div
                 onClick={addCategory}
-                className="bg-black text-white px-4 py-2 font-semibold cursor-pointer"
+                className="bg-black text-white px-5 py-2 font-semibold cursor-pointer"
               >
                 Add
               </div>
@@ -123,14 +127,15 @@ const CreatePost = () => {
               ))}
             </div>
           </div>
-          <p className="font-semibold md:text-lg text-lg ">
-            Add Post Description </p>
+          <p className="text-blue-900 font-semibold md:text-lg text-lg ">
+            Add Post Description{" "}
+          </p>
           <textarea
             onChange={(e) => setDesc(e.target.value)}
             rows={15}
             cols={30}
             className="px-4 py-2 outline-none"
-            placeholder="Enter post description"
+            placeholder="Enter Post Description"
           />
           <button
             onClick={handleCreate}
